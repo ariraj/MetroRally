@@ -75,6 +75,9 @@ namespace MetroRally
         /// all of your content.
         /// </summary>
         private ScrollingBackground myBackground;
+        private Vector2 ViperPos;  // Position of foreground sprite on screen
+        private int ScrollHeight; // Height of background sprite
+        private Viewport viewport;
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -86,6 +89,12 @@ namespace MetroRally
             spriteBatch = new SpriteBatch(GraphicsDevice);
             myBackground = new ScrollingBackground();
             Texture2D background = this.Content.Load<Texture2D>(".\\Textures\\background");
+            viewport = graphics.GraphicsDevice.Viewport;
+
+            ViperPos.X = viewport.Width / 2;
+            ViperPos.Y = viewport.Height - 100;
+            ScrollHeight = 625; //only a placeholder
+
             myBackground.Load(GraphicsDevice, background);
         }
 
@@ -140,10 +149,13 @@ namespace MetroRally
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin();
+
+            spriteBatch.Begin();            
+            myBackground.Draw(spriteBatch);            
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             spriteBatch.Draw(carTexture, car.Position, Color.White);
-            myBackground.Draw(spriteBatch);
-            
             spriteBatch.End();
             // TODO: Add your drawing code here
 
