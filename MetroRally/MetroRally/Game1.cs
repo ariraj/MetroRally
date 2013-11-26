@@ -18,13 +18,12 @@ namespace MetroRally
     /// This is the main type for your game
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
-    {
+    {        
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Car car;
         Texture2D carTexture;
         Motion motion;
-        
 
         public Game1()
         {
@@ -75,12 +74,19 @@ namespace MetroRally
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
+        private ScrollingBackground myBackground;
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             carTexture = this.Content.Load<Texture2D>(".\\Textures\\car");
             // TODO: use this.Content to load your game content here
+
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            myBackground = new ScrollingBackground();
+            Texture2D background = this.Content.Load<Texture2D>(".\\Textures\\background");
+            myBackground.Load(GraphicsDevice, background);
         }
 
         /// <summary>
@@ -119,6 +125,9 @@ namespace MetroRally
                 }
             }
 
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            myBackground.Update(elapsed * 100);
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -133,6 +142,7 @@ namespace MetroRally
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             spriteBatch.Draw(carTexture, car.Position, Color.White);
+            myBackground.Draw(spriteBatch);
             
             spriteBatch.End();
             // TODO: Add your drawing code here
