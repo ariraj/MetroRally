@@ -25,6 +25,14 @@ namespace MetroRally
         Texture2D carTexture;
         Motion motion;
 
+        private ScrollingBackground myBackground;
+        private Vector2 ViperPos;  // Position of foreground sprite on screen
+        private int ScrollHeight; // Height of background sprite
+        private Viewport viewport;
+
+        private Obstacles obstacle;
+        
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -74,10 +82,7 @@ namespace MetroRally
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        private ScrollingBackground myBackground;
-        private Vector2 ViperPos;  // Position of foreground sprite on screen
-        private int ScrollHeight; // Height of background sprite
-        private Viewport viewport;
+        
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -87,15 +92,29 @@ namespace MetroRally
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            obstacle = new Obstacles();
+            Texture2D obstacle1 = this.Content.Load<Texture2D>(".\\Textures\\obstacle1");
+            viewport = graphics.GraphicsDevice.Viewport;
+
+            ViperPos.X = viewport.Width / 2;
+            ViperPos.Y = viewport.Height - 100;
+            ScrollHeight = 825; //only a placeholder
+
+            obstacle.Load(GraphicsDevice, obstacle1);
+
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
             myBackground = new ScrollingBackground();
             Texture2D background = this.Content.Load<Texture2D>(".\\Textures\\background");
             viewport = graphics.GraphicsDevice.Viewport;
 
             ViperPos.X = viewport.Width / 2;
             ViperPos.Y = viewport.Height - 100;
-            ScrollHeight = 625; //only a placeholder
+            ScrollHeight = 825; //only a placeholder
 
             myBackground.Load(GraphicsDevice, background);
+
+            
         }
 
         /// <summary>
@@ -137,6 +156,9 @@ namespace MetroRally
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             myBackground.Update(elapsed * 100);
 
+            float elapsedObstacle = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            obstacle.Update(elapsed * 100);
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -152,6 +174,10 @@ namespace MetroRally
 
             spriteBatch.Begin();            
             myBackground.Draw(spriteBatch);            
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            obstacle.Draw(spriteBatch);
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
