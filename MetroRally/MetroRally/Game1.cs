@@ -29,6 +29,7 @@ namespace MetroRally
         private Vector2 ViperPos;  // Position of foreground sprite on screen
         private int ScrollHeight; // Height of background sprite
         private Viewport viewport;
+        private int speedup=80;
 
         private Obstacles obstacle;
         
@@ -109,8 +110,8 @@ namespace MetroRally
             viewport = graphics.GraphicsDevice.Viewport;
 
             ViperPos.X = viewport.Width / 2;
-            ViperPos.Y = viewport.Height - 100;
-            ScrollHeight = 825; //only a placeholder
+            ViperPos.Y = viewport.Height -100;
+            ScrollHeight = 675; //only a placeholder
 
             myBackground.Load(GraphicsDevice, background);
 
@@ -153,11 +154,12 @@ namespace MetroRally
                 }
             }
 
+            speedup += 1;
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            myBackground.Update(elapsed * 100);
+            myBackground.Update(elapsed * speedup);
 
             float elapsedObstacle = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            obstacle.Update(elapsed * 100);
+            obstacle.Update(elapsed * speedup);
 
             // TODO: Add your update logic here
 
