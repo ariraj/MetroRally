@@ -27,6 +27,8 @@ namespace MetroRally
         private Random rand;
         private Color color;
 
+        bool isGameOver;
+
         public void Load(GraphicsDevice device, Texture2D obsTexture)
         {
             obstacleTexture = obsTexture;
@@ -46,6 +48,7 @@ namespace MetroRally
             screenpos = new Vector2(randomInt, 0);
             // Offset to draw the second texture, when necessary.
            // texturesize = new Vector2(0, obstacleTexture.Height);
+
         }
 
 

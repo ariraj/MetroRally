@@ -22,7 +22,7 @@ namespace MetroRally
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Car car;
-        Texture2D carTexture;
+        Texture2D carTexture, GameOverScreen;
         Motion motion;
 
         private ScrollingBackground myBackground;
@@ -32,6 +32,8 @@ namespace MetroRally
         private int velocity=60;
 
         Obstacles obstacle;
+
+        bool isGameOver;
         
 
         public Game1()
@@ -115,7 +117,9 @@ namespace MetroRally
 
             myBackground.Load(GraphicsDevice, background);
 
-            
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            GameOverScreen = Content.Load<Texture2D>(".\\Textures\\gameOver");
+            isGameOver = false;
         }
 
         /// <summary>
@@ -141,32 +145,41 @@ namespace MetroRally
                 this.Exit();
             TouchCollection currentTouch = TouchPanel.GetState();
 
-            if(carRect.Intersects(obsRect))
-                System.Diagnostics.Debug.WriteLine("Collision");
-
-            foreach (TouchLocation location in currentTouch)
+            if (carRect.Intersects(obsRect))
             {
-                switch (location.State)
-                {
-                    case TouchLocationState.Pressed:
-                        //car.Position.X = location.Position.X;
-                        //car.Position.Y = location.Position.Y;
-                        break;
-                    case TouchLocationState.Moved:
-                        car.Position.X = location.Position.X-carTexture.Width/2;
-                        //car.Position.Y = location.Position.Y;
-                        break;
-                }
+                System.Diagnostics.Debug.WriteLine("Collision");
+                isGameOver = true;
             }
 
-            velocity += 1;
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            myBackground.Update(elapsed * velocity);
+            if (isGameOver == false)
+            {
+                foreach (TouchLocation location in currentTouch)
+                {
+                    switch (location.State)
+                    {
+                        case TouchLocationState.Pressed:
+                            //car.Position.X = location.Position.X;
+                            //car.Position.Y = location.Position.Y;
+                            break;
+                        case TouchLocationState.Moved:
+                            car.Position.X = location.Position.X - carTexture.Width / 2;
+                            //car.Position.Y = location.Position.Y;
+                            break;
+                    }
+                }
 
-            float elapsedObstacle = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            obstacle.Update(elapsed * velocity);
+                velocity += 1;
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                myBackground.Update(elapsed * velocity);
 
-            // TODO: Add your update logic here
+                float elapsedObstacle = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                obstacle.Update(elapsed * velocity);
+            }
+            else
+            {
+                isGameOver = true;
+            }
+            
 
             base.Update(gameTime);
         }
@@ -179,18 +192,26 @@ namespace MetroRally
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin();            
-            myBackground.Draw(spriteBatch);            
-            spriteBatch.End();
+            if (isGameOver == false)
+            {
+                spriteBatch.Begin();
+                myBackground.Draw(spriteBatch);
+                spriteBatch.End();
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            obstacle.Draw(spriteBatch);
-            spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                obstacle.Draw(spriteBatch);
+                spriteBatch.End();
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            spriteBatch.Draw(carTexture, car.Position, Color.White);
-            spriteBatch.End();
-            // TODO: Add your drawing code here
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                spriteBatch.Draw(carTexture, car.Position, Color.White);
+                spriteBatch.End();
+            }
+            else
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(GameOverScreen, Vector2.Zero, Color.White);
+                spriteBatch.End();
+            }
 
             base.Draw(gameTime);
         }
