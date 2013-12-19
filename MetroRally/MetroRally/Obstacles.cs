@@ -20,9 +20,10 @@ namespace MetroRally
 
     public class Obstacles
     {
-        private Texture2D obstacleTexture;
+        public Texture2D obstacleTexture;
         private int screenheight;
-        private Vector2 screenpos, origin, texturesize;
+        private Vector2 origin, texturesize;
+        public Vector2 screenpos;
         private Random rand;
 
         public void Load(GraphicsDevice device, Texture2D obsTexture)

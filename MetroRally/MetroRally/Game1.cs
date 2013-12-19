@@ -29,9 +29,9 @@ namespace MetroRally
         private Vector2 ViperPos;  // Position of foreground sprite on screen
         private int ScrollHeight; // Height of background sprite
         private Viewport viewport;
-        private int speedup=80;
+        private int velocity=60;
 
-        private Obstacles obstacle;
+        Obstacles obstacle;
         
 
         public Game1()
@@ -134,32 +134,37 @@ namespace MetroRally
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            Rectangle carRect = new Rectangle((int)car.Position.X, (int)car.Position.Y, carTexture.Width, carTexture.Height);
+            Rectangle obsRect = new Rectangle((int)obstacle.screenpos.X, (int)obstacle.screenpos.Y, 10, 10);
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             TouchCollection currentTouch = TouchPanel.GetState();
+
+            if(carRect.Intersects(obsRect))
+                System.Diagnostics.Debug.WriteLine("Collision");
 
             foreach (TouchLocation location in currentTouch)
             {
                 switch (location.State)
                 {
                     case TouchLocationState.Pressed:
-                        car.Position.X = location.Position.X;
+                        //car.Position.X = location.Position.X;
                         //car.Position.Y = location.Position.Y;
                         break;
                     case TouchLocationState.Moved:
-                        car.Position.X = location.Position.X;
-                       // car.Position.Y = location.Position.Y;
+                        car.Position.X = location.Position.X-carTexture.Width/2;
+                        //car.Position.Y = location.Position.Y;
                         break;
                 }
             }
 
-            speedup += 1;
+            velocity += 1;
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            myBackground.Update(elapsed * speedup);
+            myBackground.Update(elapsed * velocity);
 
             float elapsedObstacle = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            obstacle.Update(elapsed * speedup);
+            obstacle.Update(elapsed * velocity);
 
             // TODO: Add your update logic here
 
