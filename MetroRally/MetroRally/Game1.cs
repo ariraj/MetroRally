@@ -189,29 +189,32 @@ namespace MetroRally
                             //car.Position.Y = location.Position.Y;
                             break;
                         case TouchLocationState.Moved:
-                            
-                            if (Math.Abs(car.Position.X - (location.Position.X - carTexture.Width / 2)) > 130)
+                            if (motion == null)
                             {
+                                if (Math.Abs(car.Position.X - (location.Position.X - carTexture.Width / 2)) > 130)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    car.Position.X = location.Position.X - carTexture.Width / 2;
+                                    break;
+                                }
+
+                                //car.Position.Y = location.Position.Y;  
                                 
-                                break;
                             }
-                            else
-                            {
-                                
-                                car.Position.X = location.Position.X - carTexture.Width / 2;
-                                break;
-                            }
-                            //car.Position.Y = location.Position.Y;
-                            
+                            break;
                     }
                 }
 
-                velocity += 1;
-                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                myBackground.Update(elapsed * velocity);
+                    velocity += 1;
+                    float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    myBackground.Update(elapsed * velocity);
 
-                float elapsedObstacle = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                obstacle.Update(elapsed * velocity);
+                    float elapsedObstacle = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    obstacle.Update(elapsed * velocity);
+                
             }
             else
             {
