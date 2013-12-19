@@ -145,9 +145,15 @@ namespace MetroRally
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
-                //this.Exit();
-                isGameOver = false;
-                lifes = 5;
+                
+                if (isGameOver)
+                {
+                    isGameOver = false;
+                    lifes = 5;
+                    velocity = 60;
+                }
+                else
+                    this.Exit();
             }
             TouchCollection currentTouch = TouchPanel.GetState();
 
