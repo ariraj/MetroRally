@@ -36,6 +36,7 @@ namespace MetroRally
         Obstacles obstacle;
 
         bool isGameOver, isHealthScreenShown;
+        private int score;
         
 
         public Game1()
@@ -78,6 +79,7 @@ namespace MetroRally
             isHealthScreenShown = false;
 
             base.Initialize();
+            life = "Your score is:";
         }
 
         void motion_CurrentValueChanged(object sender, SensorReadingEventArgs<MotionReading> e)
@@ -207,14 +209,16 @@ namespace MetroRally
                             break;
                     }
                 }
-
+                if (isHealthScreenShown == false)
+                {
+                    score++;
                     velocity += 1;
                     float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
                     myBackground.Update(elapsed * velocity);
 
                     float elapsedObstacle = (float)gameTime.ElapsedGameTime.TotalSeconds;
                     obstacle.Update(elapsed * velocity);
-                
+                }
             }
             else
             {
@@ -260,14 +264,23 @@ namespace MetroRally
                     //Vector2 FontOrigin = Font1.MeasureString(lifes);
                     spriteBatch.Begin();
                     spriteBatch.Draw(healthScreen, Vector2.Zero, Color.White);
-                   // spriteBatch.DrawString(Font1, lifes.ToString(), FontPos, Color.White);
                     spriteBatch.End();
+
+                    
+                   // spriteBatch.DrawString(Font1, lifes.ToString(), FontPos, Color.White);
+                    
                 }
             }
             else
             {
                 spriteBatch.Begin();
                 spriteBatch.Draw(GameOverScreen, Vector2.Zero, Color.White);
+                spriteBatch.End();
+
+                spriteBatch.Begin();
+                spriteBatch.DrawString(Font1, life, Vector2.Zero, Color.White);
+                spriteBatch.DrawString(Font1, score.ToString(), FontPos, Color.White);
+               
                 spriteBatch.End();
             }
 
