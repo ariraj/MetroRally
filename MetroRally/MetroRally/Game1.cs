@@ -82,7 +82,7 @@ namespace MetroRally
 
         void motion_CurrentValueChanged(object sender, SensorReadingEventArgs<MotionReading> e)
         {
-
+            car.Position.X = (int)(e.SensorReading.Gravity.X * 300 + 200);
         }
 
         /// <summary>
@@ -144,7 +144,11 @@ namespace MetroRally
             Rectangle obsRect = new Rectangle((int)obstacle.screenpos.X, (int)obstacle.screenpos.Y, carTexture.Width, carTexture.Height);
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            {
+                //this.Exit();
+                isGameOver = false;
+                lifes = 5;
+            }
             TouchCollection currentTouch = TouchPanel.GetState();
 
             if (carRect.Intersects(obsRect))
