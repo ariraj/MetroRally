@@ -22,18 +22,20 @@ namespace MetroRally
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Car car;
-        Texture2D carTexture, GameOverScreen;
+        Texture2D carTexture, GameOverScreen, healthScreen;
         Motion motion;
 
         private ScrollingBackground myBackground;
-        private Vector2 ViperPos;  // Position of foreground sprite on screen
-        private int ScrollHeight; // Height of background sprite
-        private Viewport viewport;
         private int velocity=60;
+
+        public int lifes;
+        string life;
+        SpriteFont Font1;
+        Vector2 FontPos;
 
         Obstacles obstacle;
 
-        bool isGameOver;
+        bool isGameOver, isHealthScreenShown;
         
 
         public Game1()
@@ -53,6 +55,7 @@ namespace MetroRally
             graphics.PreferredBackBufferHeight = 1280;
             graphics.PreferredBackBufferWidth = 768;
             graphics.IsFullScreen = true;
+           
         }
 
         /// <summary>
@@ -70,8 +73,9 @@ namespace MetroRally
                 motion.CurrentValueChanged += new EventHandler<SensorReadingEventArgs<MotionReading>>(motion_CurrentValueChanged);
                 motion.Start();
             }
-            
-            
+    
+            lifes = 5;
+            isHealthScreenShown = false;
 
             base.Initialize();
         }
@@ -91,17 +95,11 @@ namespace MetroRally
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             carTexture = this.Content.Load<Texture2D>(".\\Textures\\car");
-            // TODO: use this.Content to load your game content here
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             obstacle = new Obstacles();
             Texture2D obstacle1 = this.Content.Load<Texture2D>(".\\Textures\\obstacle1");
-            viewport = graphics.GraphicsDevice.Viewport;
-
-            ViperPos.X = viewport.Width / 2;
-            ViperPos.Y = viewport.Height - 100;
-            ScrollHeight = 825; //only a placeholder
 
             obstacle.Load(GraphicsDevice, obstacle1);
 
@@ -109,17 +107,21 @@ namespace MetroRally
             spriteBatch = new SpriteBatch(GraphicsDevice);
             myBackground = new ScrollingBackground();
             Texture2D background = this.Content.Load<Texture2D>(".\\Textures\\background");
-            viewport = graphics.GraphicsDevice.Viewport;
 
-            ViperPos.X = viewport.Width / 2;
-            ViperPos.Y = viewport.Height -100;
-            ScrollHeight = 675; //only a placeholder
 
             myBackground.Load(GraphicsDevice, background);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             GameOverScreen = Content.Load<Texture2D>(".\\Textures\\gameOver");
             isGameOver = false;
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            healthScreen = Content.Load<Texture2D>(".\\Textures\\healthScreen");
+            isGameOver = false;
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            Font1 = Content.Load<SpriteFont>("Arial");
+            FontPos = new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, 0);
         }
 
         /// <summary>
@@ -147,8 +149,19 @@ namespace MetroRally
 
             if (carRect.Intersects(obsRect))
             {
+
                 System.Diagnostics.Debug.WriteLine("Collision");
-                isGameOver = true;
+                if (obstacle.updateCollision == true)
+                {
+                    lifes--;
+                    obstacle.updateCollision = false;
+                    obstacle.screenpos.Y = 0;
+                }
+                
+                isHealthScreenShown = true;
+                
+                if(lifes == 0)
+                    isGameOver = true;
             }
 
             if (isGameOver == false)
@@ -158,13 +171,28 @@ namespace MetroRally
                     switch (location.State)
                     {
                         case TouchLocationState.Pressed:
+                            if (isHealthScreenShown == true)
+                            {
+                                isHealthScreenShown = false;
+                            }
                             //car.Position.X = location.Position.X;
                             //car.Position.Y = location.Position.Y;
                             break;
                         case TouchLocationState.Moved:
-                            car.Position.X = location.Position.X - carTexture.Width / 2;
+                            
+                            if (Math.Abs(car.Position.X - (location.Position.X - carTexture.Width / 2)) > 130)
+                            {
+                                
+                                break;
+                            }
+                            else
+                            {
+                                
+                                car.Position.X = location.Position.X - carTexture.Width / 2;
+                                break;
+                            }
                             //car.Position.Y = location.Position.Y;
-                            break;
+                            
                     }
                 }
 
@@ -194,17 +222,34 @@ namespace MetroRally
 
             if (isGameOver == false)
             {
+                //background
                 spriteBatch.Begin();
                 myBackground.Draw(spriteBatch);
                 spriteBatch.End();
 
+                //obstacle (opponents car)
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 obstacle.Draw(spriteBatch);
                 spriteBatch.End();
 
+                //player car
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 spriteBatch.Draw(carTexture, car.Position, Color.White);
                 spriteBatch.End();
+
+                //health
+                spriteBatch.Begin();
+                spriteBatch.DrawString(Font1, lifes.ToString(), FontPos, Color.White);
+                spriteBatch.End();
+
+                if (isHealthScreenShown == true)
+                {
+                    //Vector2 FontOrigin = Font1.MeasureString(lifes);
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(healthScreen, Vector2.Zero, Color.White);
+                   // spriteBatch.DrawString(Font1, lifes.ToString(), FontPos, Color.White);
+                    spriteBatch.End();
+                }
             }
             else
             {

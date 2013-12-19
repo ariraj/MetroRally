@@ -21,13 +21,13 @@ namespace MetroRally
     public class Obstacles
     {
         public Texture2D obstacleTexture;
+        public bool updateCollision;
         private int screenheight;
-        private Vector2 origin, texturesize;
+        private Vector2 origin;
         public Vector2 screenpos;
         private Random rand;
         private Color color;
 
-        bool isGameOver;
 
         public void Load(GraphicsDevice device, Texture2D obsTexture)
         {
@@ -41,8 +41,8 @@ namespace MetroRally
             rand = new Random();
             int randomInt = rand.Next(10, 450);
             color = new Color((byte)rand.Next(0, 255), (byte)rand.Next(0, 255), (byte)rand.Next(0, 255));
-            
-            
+
+            updateCollision = true;
 
             //screenpos = new Vector2(screenwidth / 5, 0);
             screenpos = new Vector2(randomInt, 0);
@@ -51,7 +51,7 @@ namespace MetroRally
 
         }
 
-
+       
         // Obstacles.Update
         public void Update(float deltaY)
         {
@@ -64,7 +64,11 @@ namespace MetroRally
                 System.Diagnostics.Debug.WriteLine(randomInt);
                 screenpos.X = randomInt;
                 color = new Color((byte)rand.Next(0, 255), (byte)rand.Next(0, 255), (byte)rand.Next(0, 255));
+
+                updateCollision = true;
             }
+            else
+                updateCollision = true;
         }
         // Obstacle.Draw
         public void Draw(SpriteBatch batch)
