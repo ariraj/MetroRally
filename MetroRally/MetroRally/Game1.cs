@@ -135,7 +135,7 @@ namespace MetroRally
         protected override void Update(GameTime gameTime)
         {
             Rectangle carRect = new Rectangle((int)car.Position.X, (int)car.Position.Y, carTexture.Width, carTexture.Height);
-            Rectangle obsRect = new Rectangle((int)obstacle.screenpos.X, (int)obstacle.screenpos.Y, 10, 10);
+            Rectangle obsRect = new Rectangle((int)obstacle.screenpos.X, (int)obstacle.screenpos.Y, carTexture.Width, carTexture.Height);
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();

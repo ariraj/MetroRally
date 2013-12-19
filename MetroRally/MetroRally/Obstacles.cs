@@ -25,6 +25,7 @@ namespace MetroRally
         private Vector2 origin, texturesize;
         public Vector2 screenpos;
         private Random rand;
+        private Color color;
 
         public void Load(GraphicsDevice device, Texture2D obsTexture)
         {
@@ -37,12 +38,14 @@ namespace MetroRally
             // Set the screen position to the center of the screen.
             rand = new Random();
             int randomInt = rand.Next(10, 450);
+            color = new Color((byte)rand.Next(0, 255), (byte)rand.Next(0, 255), (byte)rand.Next(0, 255));
+            
             
 
             //screenpos = new Vector2(screenwidth / 5, 0);
             screenpos = new Vector2(randomInt, 0);
             // Offset to draw the second texture, when necessary.
-            texturesize = new Vector2(0, obstacleTexture.Height);
+           // texturesize = new Vector2(0, obstacleTexture.Height);
         }
 
 
@@ -57,6 +60,7 @@ namespace MetroRally
                 int randomInt = rand.Next(10, 450);
                 System.Diagnostics.Debug.WriteLine(randomInt);
                 screenpos.X = randomInt;
+                color = new Color((byte)rand.Next(0, 255), (byte)rand.Next(0, 255), (byte)rand.Next(0, 255));
             }
         }
         // Obstacle.Draw
@@ -66,12 +70,12 @@ namespace MetroRally
             if (screenpos.Y < screenheight)
             {
                 batch.Draw(obstacleTexture, screenpos, null,
-                     Color.White, 0, origin, 1, SpriteEffects.None, 0f);
+                     color, 0, origin, 1, SpriteEffects.None, 0f);
             }
             // Draw the texture a second time, behind the first,
             // to create the scrolling illusion.
-            batch.Draw(obstacleTexture, screenpos - texturesize, null,
-                 Color.White, 0, origin, 1, SpriteEffects.None, 0f);
+           // batch.Draw(obstacleTexture, screenpos - texturesize, null,
+             //    Color.White, 0, origin, 1, SpriteEffects.None, 0f);
         }
     }
 }
