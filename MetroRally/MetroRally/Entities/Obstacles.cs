@@ -14,7 +14,7 @@ using System.Diagnostics;
 namespace MetroRally
 {
     /// <summary>
-    /// This is a game component that implements IUpdateable.
+    /// Implemented by Pauli Korhonen
     /// </summary>
     
 

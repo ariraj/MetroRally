@@ -12,6 +12,10 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MetroRally
 {
+    /// <summary>
+    /// Implemeted by Pauli Korhonen
+    /// </summary>
+    /// 
     public class ScrollingBackground
     {
         // class ScrollingBackground

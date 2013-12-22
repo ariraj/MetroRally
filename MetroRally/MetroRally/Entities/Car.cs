@@ -6,6 +6,9 @@ using System.Text;
 
 namespace MetroRally.Entities
 {
+    /// <summary>
+    /// Implemented by Ari Rajamäki
+    /// </summary>
     class Car
     {
         public Vector2 Position;

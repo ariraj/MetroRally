@@ -15,8 +15,9 @@ using MetroRally.Entities;
 namespace MetroRally
 {
     /// <summary>
-    /// This is the main type for your game
+    /// Implemented by Ari Rajamäki & Pauli Korhonen
     /// </summary>
+
     public class Game1 : Microsoft.Xna.Framework.Game
     {        
         GraphicsDeviceManager graphics;
@@ -59,12 +60,7 @@ namespace MetroRally
            
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
+
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -84,13 +80,15 @@ namespace MetroRally
 
         void motion_CurrentValueChanged(object sender, SensorReadingEventArgs<MotionReading> e)
         {
-            car.Position.X = (int)(e.SensorReading.Gravity.X * 300 + 200);
+            int xposition = (int)(e.SensorReading.Gravity.X * 300 + 200);
+            if(xposition > 400)
+                xposition = 400;
+            if(xposition < 0)
+                xposition = 0;
+            car.Position.X = xposition;
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+
         
         protected override void LoadContent()
         {
@@ -98,14 +96,14 @@ namespace MetroRally
             spriteBatch = new SpriteBatch(GraphicsDevice);
             carTexture = this.Content.Load<Texture2D>(".\\Textures\\car");
 
-            // Create a new SpriteBatch, which can be used to draw textures.
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             obstacle = new Obstacles();
             Texture2D obstacle1 = this.Content.Load<Texture2D>(".\\Textures\\obstacle1");
 
             obstacle.Load(GraphicsDevice, obstacle1);
 
-            // Create a new SpriteBatch, which can be used to draw textures.
+    
             spriteBatch = new SpriteBatch(GraphicsDevice);
             myBackground = new ScrollingBackground();
             Texture2D background = this.Content.Load<Texture2D>(".\\Textures\\background");
@@ -126,20 +124,13 @@ namespace MetroRally
             FontPos = new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, 0);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
+ 
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+
         protected override void Update(GameTime gameTime)
         {
             Rectangle carRect = new Rectangle((int)car.Position.X, (int)car.Position.Y, carTexture.Width, carTexture.Height);
@@ -229,10 +220,7 @@ namespace MetroRally
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
